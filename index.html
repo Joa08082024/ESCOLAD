@@ -5,25 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Alunos</title>
     <style>
-        /* Estilo básico para abas */
+        /* Estilos básicos para as abas */
         .tab {
-            display: none; /* Esconde todas as abas inicialmente */
+            display: none;
         }
-        .tab.active {
-            display: block; /* Mostra a aba ativa */
-        }
-        .tab-buttons {
-            margin-bottom: 10px;
-        }
-        .tab-button {
+        .tablinks {
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
             cursor: pointer;
             padding: 10px;
-            border: 1px solid #ccc;
-            background-color: #f1f1f1;
-            margin-right: 5px;
+            margin: 0;
+            display: inline-block;
         }
-        .tab-button.active {
+        .tablinks:hover {
             background-color: #ddd;
+        }
+        .active {
+            background-color: #ccc;
         }
     </style>
 </head>
@@ -55,21 +53,30 @@
     </form>
 
     <h2>Relatório de Alunos por Classe</h2>
-    <div class="tab-buttons">
-        <div class="tab-button active" onclick="showTab('CORDEIRINHOS')">CORDEIRINHOS</div>
-        <div class="tab-button" onclick="showTab('HEROIS')">HEROIS</div>
-        <div class="tab-button" onclick="showTab('LIRIO')">LIRIO</div>
-        <div class="tab-button" onclick="showTab('ESTRELA')">ESTRELA</div>
-        <div class="tab-button" onclick="showTab('SEMENTINHAS')">SEMENTINHAS</div>
+    <div id="relatorioAlunos"></div>
+
+    <h2>Alunos Matriculados</h2>
+    <div>
+        <button class="tablinks" onclick="openTab(event, 'CORDEIRINHOS')">CORDEIRINHOS</button>
+        <button class="tablinks" onclick="openTab(event, 'HEROIS')">HEROIS</button>
+        <button class="tablinks" onclick="openTab(event, 'LIRIO')">LIRIO</button>
+        <button class="tablinks" onclick="openTab(event, 'ESTRELA')">ESTRELA</button>
+        <button class="tablinks" onclick="openTab(event, 'SEMENTINHAS')">SEMENTINHAS</button>
     </div>
 
-    <div id="CORDEIRINHOS" class="tab active"></div>
+    <div id="CORDEIRINHOS" class="tab"></div>
     <div id="HEROIS" class="tab"></div>
     <div id="LIRIO" class="tab"></div>
     <div id="ESTRELA" class="tab"></div>
     <div id="SEMENTINHAS" class="tab"></div>
 
     <script>
+        // Função para formatar a data de YYYY-MM-DD para DD/MM/YYYY
+        function formatarData(data) {
+            const [ano, mes, dia] = data.split('-');
+            return `${dia}/${mes}/${ano}`;
+        }
+
         // Função para processar o envio do formulário
         document.getElementById('formCadastro').onsubmit = function(event) {
             event.preventDefault();  // Previne o comportamento padrão do formulário
@@ -85,11 +92,17 @@
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na resposta do servidor: ' + response.statusText);
+                }
+                return response.text();
+            })
             .then(data => {
                 alert(data);  // Exibe a resposta do servidor (ex.: sucesso)
                 document.getElementById('formCadastro').reset();  // Limpa o formulário após o envio
                 carregarAlunos(); // Atualiza o relatório após o cadastro
+                carregarAlunosMatriculados(); // Atualiza as abas de alunos matriculados
             })
             .catch(error => {
                 console.error('Erro:', error);  // Mostra qualquer erro no console
@@ -100,23 +113,14 @@
         function carregarAlunos() {
             const scriptURL = 'https://script.google.com/macros/s/AKfycbzhsRneWIVz-KkRvDGqUnMvPN_57zVnOWZwTy24odqyk0jtikulWYZZ2lk02OAe0aA/exec'; // URL do seu Google Apps Script
             fetch(scriptURL)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro na rede: ' + response.statusText);
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
-                    console.log('Dados recebidos:', data); // Log dos dados recebidos
-                    // Limpa o conteúdo anterior de todas as abas
-                    const tabs = document.querySelectorAll('.tab');
-                    tabs.forEach(tab => {
-                        tab.innerHTML = ''; // Limpa cada aba
-                    });
+                    let relatorioDiv = document.getElementById('relatorioAlunos');
+                    relatorioDiv.innerHTML = ''; // Limpa qualquer conteúdo anterior
 
-                    // Adiciona os alunos a cada aba
                     for (let classe in data) {
-                        let tabDiv = document.getElementById(classe);
+                        let classeDiv = document.createElement('div');
+                        classeDiv.innerHTML = `<h3>${classe}</h3>`;
                         let tabela = document.createElement('table');
                         tabela.border = "1";
 
@@ -128,21 +132,17 @@
                         linhaCabecalho.insertCell().innerText = "Telefone";
                         linhaCabecalho.insertCell().innerText = "Endereço";
 
-                        // Adiciona os alunos à tabela da classe correspondente
-                        if (data[classe].length === 0) {
+                        // Adiciona os alunos à tabela
+                        data[classe].forEach(aluno => {
                             let linha = tabela.insertRow();
-                            linha.insertCell().innerText = "Nenhum aluno matriculado.";
-                        } else {
-                            data[classe].forEach(aluno => {
-                                let linha = tabela.insertRow();
-                                linha.insertCell().innerText = aluno.nome;
-                                linha.insertCell().innerText = aluno.dataNascimento;
-                                linha.insertCell().innerText = aluno.telefone;
-                                linha.insertCell().innerText = aluno.endereco;
-                            });
-                        }
+                            linha.insertCell().innerText = aluno.nome;
+                            linha.insertCell().innerText = formatarData(aluno.dataNascimento);  // Formata a data antes de exibir
+                            linha.insertCell().innerText = aluno.telefone;
+                            linha.insertCell().innerText = aluno.endereco;
+                        });
 
-                        tabDiv.appendChild(tabela);
+                        classeDiv.appendChild(tabela);
+                        relatorioDiv.appendChild(classeDiv);
                     }
                 })
                 .catch(error => {
@@ -150,27 +150,69 @@
                 });
         }
 
-        // Função para mostrar a aba correspondente
-        function showTab(classe) {
-            // Esconde todas as abas
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => {
-                tab.classList.remove('active');
-            });
+        // Função para carregar alunos matriculados em cada classe
+        function carregarAlunosMatriculados() {
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwN4t7saD9GdNdlOSSmu-soIjP8zb_eI3DV1dJ02xJRGV_lfYyzbpqDCprCTKauHV04/exec'; // URL do seu Google Apps Script
+            fetch(scriptURL)
+                .then(response => response.json())
+                .then(data => {
+                    for (let classe in data) {
+                        let tabDiv = document.getElementById(classe);
+                        tabDiv.innerHTML = ''; // Limpa qualquer conteúdo anterior
 
-            // Remove a classe ativa de todos os botões de aba
-            const tabButtons = document.querySelectorAll('.tab-button');
-            tabButtons.forEach(button => {
-                button.classList.remove('active');
-            });
+                        let tabela = document.createElement('table');
+                        tabela.border = "1";
 
-            // Mostra a aba correspondente
-            document.getElementById(classe).classList.add('active');
-            document.querySelector(`.tab-button:contains('${classe}')`).classList.add('active');
+                        // Cria cabeçalhos da tabela
+                        let cabecalho = tabela.createTHead();
+                        let linhaCabecalho = cabecalho.insertRow();
+                        linhaCabecalho.insertCell().innerText = "Nome";
+                        linhaCabecalho.insertCell().innerText = "Data de Nascimento";
+                        linhaCabecalho.insertCell().innerText = "Telefone";
+                        linhaCabecalho.insertCell().innerText = "Endereço";
+
+                        // Adiciona os alunos à tabela
+                        data[classe].forEach(aluno => {
+                            let linha = tabela.insertRow();
+                            linha.insertCell().innerText = aluno.nome;
+                            linha.insertCell().innerText = formatarData(aluno.dataNascimento);  // Formata a data antes de exibir
+                            linha.insertCell().innerText = aluno.telefone;
+                            linha.insertCell().innerText = aluno.endereco;
+                        });
+
+                        tabDiv.appendChild(tabela);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar dados dos matriculados:', error);
+                });
         }
 
-        // Carrega os alunos assim que a página for carregada
-        window.onload = carregarAlunos;
+        // Função para abrir as abas
+        function openTab(evt, classeName) {
+            // Oculta todas as abas
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Remove a classe "active" de todos os botões
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Exibe a aba atual e adiciona a classe "active" ao botão que foi clicado
+            document.getElementById(classeName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Carregar os dados ao iniciar a página
+        window.onload = function() {
+            carregarAlunos();
+            carregarAlunosMatriculados();
+        };
     </script>
 </body>
 </html>
