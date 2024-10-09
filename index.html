@@ -32,6 +32,9 @@
         <button type="submit">Cadastrar</button>
     </form>
 
+    <h2>Relatório de Alunos por Classe</h2>
+    <div id="relatorioAlunos"></div>
+
     <script>
         // Função para processar o envio do formulário
         document.getElementById('formCadastro').onsubmit = function(event) {
@@ -52,11 +55,56 @@
             .then(data => {
                 alert(data);  // Exibe a resposta do servidor (ex.: sucesso)
                 document.getElementById('formCadastro').reset();  // Limpa o formulário após o envio
+                carregarAlunos(); // Atualiza o relatório após o cadastro
             })
             .catch(error => {
                 console.error('Erro:', error);  // Mostra qualquer erro no console
             });
         };
+
+        // Função para carregar os dados dos alunos de cada classe
+        function carregarAlunos() {
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbzhsRneWIVz-KkRvDGqUnMvPN_57zVnOWZwTy24odqyk0jtikulWYZZ2lk02OAe0aA/exec'; // URL do seu Google Apps Script
+            fetch(scriptURL)
+                .then(response => response.json())
+                .then(data => {
+                    let relatorioDiv = document.getElementById('relatorioAlunos');
+                    relatorioDiv.innerHTML = ''; // Limpa qualquer conteúdo anterior
+
+                    for (let classe in data) {
+                        let classeDiv = document.createElement('div');
+                        classeDiv.innerHTML = `<h3>${classe}</h3>`;
+                        let tabela = document.createElement('table');
+                        tabela.border = "1";
+
+                        // Cria cabeçalhos da tabela
+                        let cabecalho = tabela.createTHead();
+                        let linhaCabecalho = cabecalho.insertRow();
+                        linhaCabecalho.insertCell().innerText = "Nome";
+                        linhaCabecalho.insertCell().innerText = "Data de Nascimento";
+                        linhaCabecalho.insertCell().innerText = "Telefone";
+                        linhaCabecalho.insertCell().innerText = "Endereço";
+
+                        // Adiciona os alunos à tabela
+                        data[classe].forEach(aluno => {
+                            let linha = tabela.insertRow();
+                            linha.insertCell().innerText = aluno.nome;
+                            linha.insertCell().innerText = aluno.dataNascimento;
+                            linha.insertCell().innerText = aluno.telefone;
+                            linha.insertCell().innerText = aluno.endereco;
+                        });
+
+                        classeDiv.appendChild(tabela);
+                        relatorioDiv.appendChild(classeDiv);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar dados:', error);
+                });
+        }
+
+        // Carrega os alunos assim que a página for carregada
+        window.onload = carregarAlunos;
     </script>
 </body>
 </html>
