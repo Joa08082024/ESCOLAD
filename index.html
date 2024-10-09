@@ -1,37 +1,62 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <base target="_top">
-  </head>
-  <body>
-    <form id="studentForm">
-      <label for="name">Nome:</label>
-      <input type="text" id="name" name="name" required><br><br>
-      <label for="dob">Data de Nascimento:</label>
-      <input type="date" id="dob" name="dob" required><br><br>
-      <label for="phone">Telefone:</label>
-      <input type="tel" id="phone" name="phone" required><br><br>
-      <label for="address">Endereço:</label>
-      <input type="text" id="address" name="address" required><br><br>
-      <label for="sheet">Aba:</label>
-      <select id="sheet" name="sheet" required>
-        <option value="HEROIS">HEROIS</option>
-        <option value="LIRIO">LIRIO</option>
-        <option value="ESTRE">ESTRE</option>
-        <option value="CORDEIRINHOS">CORDEIRINHOS</option>
-        <option value="SEMENTINHAS">SEMENTINHAS</option>
-      </select><br><br>
-      <input type="submit" value="Cadastrar">
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Alunos</title>
+</head>
+<body>
+    <h1>Cadastro de Alunos</h1>
+    <form id="formCadastro">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required><br><br>
+
+        <label for="dataNascimento">Data de Nascimento:</label>
+        <input type="date" id="dataNascimento" name="dataNascimento" required><br><br>
+
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" name="telefone" required><br><br>
+
+        <label for="endereco">Endereço:</label>
+        <input type="text" id="endereco" name="endereco" required><br><br>
+
+        <label for="classe">Classe:</label>
+        <select id="classe" name="classe" required>
+            <option value="CORDEIRINHOS">CORDEIRINHOS</option>
+            <option value="HEROIS">HEROIS</option>
+            <option value="LIRIO">LIRIO</option>
+            <option value="ESTRELA">ESTRELA</option>
+            <option value="SEMENTINHAS">SEMENTINHAS</option>
+        </select><br><br>
+
+        <button type="submit">Cadastrar</button>
     </form>
-    <div id="output"></div>
+
     <script>
-      document.getElementById('studentForm').onsubmit = function(event) {
-        event.preventDefault();
-        var formData = new FormData(this);
-        google.script.run.withSuccessHandler(function(response) {
-          document.getElementById('output').innerText = response;
-        }).submitStudentData(Object.fromEntries(formData));
-      };
+        // Função para processar o envio do formulário
+        document.getElementById('formCadastro').onsubmit = function(event) {
+            event.preventDefault();  // Previne o comportamento padrão do formulário
+
+            // Cria um objeto FormData com os dados do formulário
+            var formData = new FormData(this);
+
+            // URL do seu Google Apps Script
+            var scriptURL = 'URL_DO_SEU_SCRIPT_AQUI';  // Substitua pela URL do Google Apps Script
+
+            // Envia os dados para o Google Apps Script
+            fetch(scriptURL, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);  // Exibe a resposta do servidor (ex.: sucesso)
+                document.getElementById('formCadastro').reset();  // Limpa o formulário após o envio
+            })
+            .catch(error => {
+                console.error('Erro:', error);  // Mostra qualquer erro no console
+            });
+        };
     </script>
-  </body>
+</body>
 </html>
