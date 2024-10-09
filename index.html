@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+    <form id="studentForm">
+      <label for="name">Nome:</label>
+      <input type="text" id="name" name="name" required><br><br>
+      <label for="dob">Data de Nascimento:</label>
+      <input type="date" id="dob" name="dob" required><br><br>
+      <label for="phone">Telefone:</label>
+      <input type="tel" id="phone" name="phone" required><br><br>
+      <label for="address">Endereço:</label>
+      <input type="text" id="address" name="address" required><br><br>
+      <label for="sheet">Aba:</label>
+      <select id="sheet" name="sheet" required>
+        <option value="HEROIS">HEROIS</option>
+        <option value="LIRIO">LIRIO</option>
+        <option value="ESTRE">ESTRE</option>
+        <option value="CORDEIRINHOS">CORDEIRINHOS</option>
+        <option value="SEMENTINHAS">SEMENTINHAS</option>
+      </select><br><br>
+      <input type="submit" value="Cadastrar">
+    </form>
+    <div id="output"></div>
+    <script>
+      document.getElementById('studentForm').onsubmit = function(event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+        google.script.run.withSuccessHandler(function(response) {
+          document.getElementById('output').innerText = response;
+        }).submitStudentData(Object.fromEntries(formData));
+      };
+    </script>
+  </body>
+</html>
