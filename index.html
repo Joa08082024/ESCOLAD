@@ -5,214 +5,254 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Alunos</title>
     <style>
-        /* Estilos básicos para as abas */
-        .tab {
-            display: none;
-        }
-        .tablinks {
-            background-color: #f1f1f1;
-            border: 1px solid #ccc;
-            cursor: pointer;
-            padding: 10px;
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
-            display: inline-block;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
         }
-        .tablinks:hover {
-            background-color: #ddd;
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
         }
-        .active {
-            background-color: #ccc;
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 90%;
+            }
+        }
+        /* Estilos para abas */
+        .tabs {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .tab:hover {
+            background-color: #0056b3;
+        }
+        .tab.active {
+            background-color: #0056b3;
+        }
+        .tab-content {
+            display: none;
+            margin-top: 10px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Estilo para ocultar a área de classes inicialmente */
+        #classesSection {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <h1>Cadastro de Alunos</h1>
-    <form id="formCadastro">
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" required><br><br>
 
-        <label for="dataNascimento">Data de Nascimento:</label>
-        <input type="date" id="dataNascimento" name="dataNascimento" required><br><br>
+    <div class="container">
+        <h1>Cadastro de Alunos</h1>
+        <form id="formCadastro">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
 
-        <label for="telefone">Telefone:</label>
-        <input type="text" id="telefone" name="telefone" required><br><br>
+            <label for="dataNascimento">Data de Nascimento:</label>
+            <input type="date" id="dataNascimento" name="dataNascimento" required>
 
-        <label for="endereco">Endereço:</label>
-        <input type="text" id="endereco" name="endereco" required><br><br>
+            <label for="telefone">Telefone:</label>
+            <input type="tel" id="telefone" name="telefone" required>
 
-        <label for="classe">Classe:</label>
-        <select id="classe" name="classe" required>
-            <option value="CORDEIRINHOS">CORDEIRINHOS</option>
-            <option value="HEROIS">HEROIS</option>
-            <option value="LIRIO">LIRIO</option>
-            <option value="ESTRELA">ESTRELA</option>
-            <option value="SEMENTINHAS">SEMENTINHAS</option>
-        </select><br><br>
+            <label for="endereco">Endereço:</label>
+            <input type="text" id="endereco" name="endereco" required>
 
-        <button type="submit">Cadastrar</button>
-    </form>
+            <label for="classe">Classe:</label>
+            <select id="classe" name="classe" required>
+                <option value="CORDEIRINHOS">CORDEIRINHOS</option>
+                <option value="HEROIS">HEROIS</option>
+                <option value="LIRIO">LIRIO</option>
+                <option value="ESTRELA">ESTRELA</option>
+                <option value="SEMENTINHAS">SEMENTINHAS</option>
+            </select>
 
-    <h2>Relatório de Alunos por Classe</h2>
-    <div id="relatorioAlunos"></div>
+            <button type="submit">Cadastrar</button>
+        </form>
 
-    <h2>Alunos Matriculados</h2>
-    <div>
-        <button class="tablinks" onclick="openTab(event, 'CORDEIRINHOS')">CORDEIRINHOS</button>
-        <button class="tablinks" onclick="openTab(event, 'HEROIS')">HEROIS</button>
-        <button class="tablinks" onclick="openTab(event, 'LIRIO')">LIRIO</button>
-        <button class="tablinks" onclick="openTab(event, 'ESTRELA')">ESTRELA</button>
-        <button class="tablinks" onclick="openTab(event, 'SEMENTINHAS')">SEMENTINHAS</button>
+        <!-- Botão para visualizar alunos matriculados por classe -->
+        <button id="toggleClassesButton" onclick="toggleClassesSection()">Ver Alunos Matriculados</button>
+
+        <!-- Início da área de Classes -->
+        <div id="classesSection">
+            <!-- Abas para cada classe -->
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('CORDEIRINHOS')">CORDEIRINHOS</div>
+                <div class="tab" onclick="showTab('HEROIS')">HEROIS</div>
+                <div class="tab" onclick="showTab('LIRIO')">LIRIO</div>
+                <div class="tab" onclick="showTab('ESTRELA')">ESTRELA</div>
+                <div class="tab" onclick="showTab('SEMENTINHAS')">SEMENTINHAS</div>
+            </div>
+
+            <!-- Conteúdo das abas -->
+            <div id="CORDEIRINHOS" class="tab-content active"></div>
+            <div id="HEROIS" class="tab-content"></div>
+            <div id="LIRIO" class="tab-content"></div>
+            <div id="ESTRELA" class="tab-content"></div>
+            <div id="SEMENTINHAS" class="tab-content"></div>
+        </div>
     </div>
 
-    <div id="CORDEIRINHOS" class="tab"></div>
-    <div id="HEROIS" class="tab"></div>
-    <div id="LIRIO" class="tab"></div>
-    <div id="ESTRELA" class="tab"></div>
-    <div id="SEMENTINHAS" class="tab"></div>
-
     <script>
-        // Função para formatar a data de YYYY-MM-DD para DD/MM/YYYY
+        // Função para formatar a data no formato DD/MM/AAAA
         function formatarData(data) {
-            const [ano, mes, dia] = data.split('-');
-            return `${dia}/${mes}/${ano}`;
+            const partes = data.split('-'); // Quebra a data no formato AAAA-MM-DD
+            return partes[2] + '/' + partes[1] + '/' + partes[0]; // Reorganiza para DD/MM/AAAA
         }
 
-        // Função para processar o envio do formulário
+        // Função para enviar o formulário para o Google Apps Script
         document.getElementById('formCadastro').onsubmit = function(event) {
             event.preventDefault();  // Previne o comportamento padrão do formulário
 
-            // Cria um objeto FormData com os dados do formulário
+            // Captura os dados do formulário
             var formData = new FormData(this);
 
-            // URL do seu Google Apps Script
-            var scriptURL = 'https://script.google.com/macros/s/AKfycbzhsRneWIVz-KkRvDGqUnMvPN_57zVnOWZwTy24odqyk0jtikulWYZZ2lk02OAe0aA/exec';  // Substitua pela URL do seu Google Apps Script
+            // Captura a data e formata corretamente
+            var dataNascimento = document.getElementById('dataNascimento').value;
+            var dataFormatada = formatarData(dataNascimento);
+            formData.set('dataNascimento', dataFormatada); // Atualiza a data formatada no formData
+
+            // Obter a classe selecionada
+            var classe = document.getElementById('classe').value;
+
+            // URL corrigida do Google Apps Script
+            var scriptURL = 'https://script.google.com/macros/s/AKfycbxy784iA3y5dIMvcNISnPLC0e7JK0Jx1dUVqIXlK30tyC6P2j16vAfDJ-aQ2i9aCQGd/exec';  // Insira a URL correta do Google Apps Script
 
             // Envia os dados para o Google Apps Script
-            fetch(scriptURL, {
+            fetch(scriptURL + '?classe=' + classe, {
                 method: 'POST',
                 body: formData
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Erro na resposta do servidor: ' + response.statusText);
+                    throw new Error('Erro no servidor: ' + response.statusText);
                 }
                 return response.text();
             })
             .then(data => {
-                alert(data);  // Exibe a resposta do servidor (ex.: sucesso)
+                alert('Cadastro realizado com sucesso!');
                 document.getElementById('formCadastro').reset();  // Limpa o formulário após o envio
-                carregarAlunos(); // Atualiza o relatório após o cadastro
-                carregarAlunosMatriculados(); // Atualiza as abas de alunos matriculados
+                loadStudents(classe);  // Atualiza a lista de alunos
             })
             .catch(error => {
-                console.error('Erro:', error);  // Mostra qualquer erro no console
+                console.error('Erro:', error);
             });
         };
 
-        // Função para carregar os dados dos alunos de cada classe
-        function carregarAlunos() {
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbzhsRneWIVz-KkRvDGqUnMvPN_57zVnOWZwTy24odqyk0jtikulWYZZ2lk02OAe0aA/exec'; // URL do seu Google Apps Script
+        // Função para mostrar a aba selecionada
+        function showTab(classe) {
+            // Esconde todas as abas
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remove a classe ativa de todas as abas
+            const allTabs = document.querySelectorAll('.tab');
+            allTabs.forEach(tab => tab.classList.remove('active'));
+
+            // Mostra a aba correspondente e a ativa
+            document.getElementById(classe).classList.add('active');
+            event.target.classList.add('active');
+            loadStudents(classe); // Atualiza a lista de alunos na aba selecionada
+        }
+
+        // Função para carregar os alunos da classe selecionada
+        function loadStudents(classe) {
+            const activeTab = document.getElementById(classe);
+
+            // URL do Google Apps Script para buscar os alunos
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbxy784iA3y5dIMvcNISnPLC0e7JK0Jx1dUVqIXlK30tyC6P2j16vAfDJ-aQ2i9aCQGd/exec';
+
             fetch(scriptURL)
                 .then(response => response.json())
                 .then(data => {
-                    let relatorioDiv = document.getElementById('relatorioAlunos');
-                    relatorioDiv.innerHTML = ''; // Limpa qualquer conteúdo anterior
+                    activeTab.innerHTML = '';  // Limpa o conteúdo da aba
 
-                    for (let classe in data) {
-                        let classeDiv = document.createElement('div');
-                        classeDiv.innerHTML = `<h3>${classe}</h3>`;
-                        let tabela = document.createElement('table');
-                        tabela.border = "1";
-
-                        // Cria cabeçalhos da tabela
-                        let cabecalho = tabela.createTHead();
-                        let linhaCabecalho = cabecalho.insertRow();
-                        linhaCabecalho.insertCell().innerText = "Nome";
-                        linhaCabecalho.insertCell().innerText = "Data de Nascimento";
-                        linhaCabecalho.insertCell().innerText = "Telefone";
-                        linhaCabecalho.insertCell().innerText = "Endereço";
-
-                        // Adiciona os alunos à tabela
-                        data[classe].forEach(aluno => {
-                            let linha = tabela.insertRow();
-                            linha.insertCell().innerText = aluno.nome;
-                            linha.insertCell().innerText = formatarData(aluno.dataNascimento);  // Formata a data antes de exibir
-                            linha.insertCell().innerText = aluno.telefone;
-                            linha.insertCell().innerText = aluno.endereco;
+                    // Verifica se há alunos na classe solicitada
+                    if (data[classe] && data[classe].length > 0) {
+                        const ul = document.createElement('ul');
+                        data[classe].forEach(student => {
+                            const li = document.createElement('li');
+                            const dataFormatada = new Date(student.dataNascimento).toLocaleDateString('pt-BR'); // Formata a data
+                            li.textContent = `${student.nome} - Nascimento: ${dataFormatada} - Endereço: ${student.endereco}`;
+                            ul.appendChild(li);
                         });
-
-                        classeDiv.appendChild(tabela);
-                        relatorioDiv.appendChild(classeDiv);
+                        activeTab.appendChild(ul);
+                    } else {
+                        activeTab.textContent = 'Nenhum aluno cadastrado nesta classe.';
                     }
                 })
                 .catch(error => {
-                    console.error('Erro ao carregar dados:', error);
+                    console.error('Erro ao carregar alunos:', error);
                 });
         }
 
-        // Função para carregar alunos matriculados em cada classe
-        function carregarAlunosMatriculados() {
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwN4t7saD9GdNdlOSSmu-soIjP8zb_eI3DV1dJ02xJRGV_lfYyzbpqDCprCTKauHV04/exec'; // URL do seu Google Apps Script
-            fetch(scriptURL)
-                .then(response => response.json())
-                .then(data => {
-                    for (let classe in data) {
-                        let tabDiv = document.getElementById(classe);
-                        tabDiv.innerHTML = ''; // Limpa qualquer conteúdo anterior
+        // Função para alternar a visibilidade da área de classes ao clicar no botão
+        function toggleClassesSection() {
+            const classesSection = document.getElementById('classesSection');
+            const button = document.getElementById('toggleClassesButton');
 
-                        let tabela = document.createElement('table');
-                        tabela.border = "1";
-
-                        // Cria cabeçalhos da tabela
-                        let cabecalho = tabela.createTHead();
-                        let linhaCabecalho = cabecalho.insertRow();
-                        linhaCabecalho.insertCell().innerText = "Nome";
-                        linhaCabecalho.insertCell().innerText = "Data de Nascimento";
-                        linhaCabecalho.insertCell().innerText = "Telefone";
-                        linhaCabecalho.insertCell().innerText = "Endereço";
-
-                        // Adiciona os alunos à tabela
-                        data[classe].forEach(aluno => {
-                            let linha = tabela.insertRow();
-                            linha.insertCell().innerText = aluno.nome;
-                            linha.insertCell().innerText = formatarData(aluno.dataNascimento);  // Formata a data antes de exibir
-                            linha.insertCell().innerText = aluno.telefone;
-                            linha.insertCell().innerText = aluno.endereco;
-                        });
-
-                        tabDiv.appendChild(tabela);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro ao carregar dados dos matriculados:', error);
-                });
-        }
-
-        // Função para abrir as abas
-        function openTab(evt, classeName) {
-            // Oculta todas as abas
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tab");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
+            if (classesSection.style.display === 'none' || classesSection.style.display === '') {
+                classesSection.style.display = 'block';
+                button.textContent = 'Ocultar Alunos Matriculados';  // Muda o texto do botão
+            } else {
+                classesSection.style.display = 'none';
+                button.textContent = 'Ver Alunos Matriculados';  // Volta ao texto original
             }
-
-            // Remove a classe "active" de todos os botões
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-
-            // Exibe a aba atual e adiciona a classe "active" ao botão que foi clicado
-            document.getElementById(classeName).style.display = "block";
-            evt.currentTarget.className += " active";
         }
-
-        // Carregar os dados ao iniciar a página
-        window.onload = function() {
-            carregarAlunos();
-            carregarAlunosMatriculados();
-        };
     </script>
+
 </body>
 </html>
