@@ -12,16 +12,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
+            min-height: 100vh; /* Mantém a altura mínima da tela */
             background-color: #f4f4f4;
         }
         .container {
             background-color: #fff;
-            padding: 20px;
+            padding: 30px; /* Aumentado para mais espaço */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
+            max-width: 600px; /* Aumentado para melhor visualização */
             width: 100%;
+            margin-top: 20px; /* Adicionado espaço superior */
         }
         h1 {
             text-align: center;
@@ -41,7 +42,7 @@
         }
         button {
             width: 100%;
-            padding: 10px;
+            padding: 12px; /* Aumentado para mais conforto ao clicar */
             background-color: #28a745;
             color: white;
             border: none;
@@ -91,6 +92,24 @@
         /* Estilo para ocultar a área de classes inicialmente */
         #classesSection {
             display: none;
+        }
+
+        /* Estilo para a área de presença */
+        .attendance-section {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+
+        .attendance-count {
+            margin-top: 10px;
+        }
+
+        /* Estilo para contagem total de alunos */
+        .total-students {
+            font-weight: bold;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -149,8 +168,8 @@
     <script>
         // Função para formatar a data no formato DD/MM/AAAA
         function formatarData(data) {
-            const partes = data.split('-'); // Quebra a data no formato AAAA-MM-DD
-            return partes[2] + '/' + partes[1] + '/' + partes[0]; // Reorganiza para DD/MM/AAAA
+            const partes = data.split('T')[0].split('-'); // Quebra a data no formato AAAA-MM-DD e pega apenas a parte da data
+            return `${partes[2]}/${partes[1]}/${partes[0]}`; // Reorganiza para DD/MM/AAAA
         }
 
         // Função para enviar o formulário para o Google Apps Script
@@ -211,25 +230,53 @@
         // Função para carregar os alunos da classe selecionada
         function loadStudents(classe) {
             const activeTab = document.getElementById(classe);
+            activeTab.innerHTML = ''; // Limpa o conteúdo anterior
 
-            // URL do Google Apps Script para buscar os alunos
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxy784iA3y5dIMvcNISnPLC0e7JK0Jx1dUVqIXlK30tyC6P2j16vAfDJ-aQ2i9aCQGd/exec';
+            // URL corrigida do Google Apps Script
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbxy784iA3y5dIMvcNISnPLC0e7JK0Jx1dUVqIXlK30tyC6P2j16vAfDJ-aQ2i9aCQGd/exec';  // Insira a URL correta do Google Apps Script
 
-            fetch(scriptURL)
+            fetch(scriptURL + '?classe=' + classe)
                 .then(response => response.json())
                 .then(data => {
-                    activeTab.innerHTML = '';  // Limpa o conteúdo da aba
-
-                    // Verifica se há alunos na classe solicitada
-                    if (data[classe] && data[classe].length > 0) {
+                    if (data && data[classe].length > 0) {
                         const ul = document.createElement('ul');
+                        const attendanceCounts = { present: 0, absent: 0 }; // Para contar presentes e ausentes
+                        
+                        // Exibe o total de alunos matriculados na classe
+                        const totalStudents = document.createElement('div');
+                        totalStudents.classList.add('total-students');
+                        totalStudents.textContent = `Total de Alunos Matriculados: ${data[classe].length}`;
+                        activeTab.appendChild(totalStudents);
+
                         data[classe].forEach(student => {
                             const li = document.createElement('li');
-                            const dataFormatada = new Date(student.dataNascimento).toLocaleDateString('pt-BR'); // Formata a data
+                            const dataFormatada = formatarData(student.dataNascimento); // Formata a data de nascimento
+
+                            // Cria um botão para marcar presença
+                            const presenceButton = document.createElement('button');
+                            presenceButton.textContent = 'Marcar Presença';
+                            presenceButton.onclick = () => {
+                                attendanceCounts.present++;
+                                li.textContent = `${student.nome} - Nascimento: ${dataFormatada} - Endereço: ${student.endereco} (Presente)`;
+                                updateAttendanceCounts(classe, attendanceCounts);
+                            };
+
+                            // Cria um botão para marcar ausência
+                            const absenceButton = document.createElement('button');
+                            absenceButton.textContent = 'Marcar Ausência';
+                            absenceButton.onclick = () => {
+                                attendanceCounts.absent++;
+                                li.textContent = `${student.nome} - Nascimento: ${dataFormatada} - Endereço: ${student.endereco} (Ausente)`;
+                                updateAttendanceCounts(classe, attendanceCounts);
+                            };
+
                             li.textContent = `${student.nome} - Nascimento: ${dataFormatada} - Endereço: ${student.endereco}`;
+                            li.appendChild(presenceButton);
+                            li.appendChild(absenceButton);
                             ul.appendChild(li);
                         });
                         activeTab.appendChild(ul);
+                        createAttendanceCountSection(activeTab, attendanceCounts); // Cria a seção de contagem
                     } else {
                         activeTab.textContent = 'Nenhum aluno cadastrado nesta classe.';
                     }
@@ -237,6 +284,21 @@
                 .catch(error => {
                     console.error('Erro ao carregar alunos:', error);
                 });
+        }
+
+        // Função para atualizar os contadores de presença e ausência
+        function updateAttendanceCounts(classe, counts) {
+            const countSection = document.getElementById(`attendanceCount-${classe}`);
+            countSection.textContent = `Presentes: ${counts.present} | Ausentes: ${counts.absent}`;
+        }
+
+        // Função para criar a seção de contagem de presença
+        function createAttendanceCountSection(parent, counts) {
+            const countSection = document.createElement('div');
+            countSection.id = `attendanceCount-${parent.id}`;
+            countSection.classList.add('attendance-section');
+            countSection.textContent = `Presentes: ${counts.present} | Ausentes: ${counts.absent}`;
+            parent.appendChild(countSection);
         }
 
         // Função para alternar a visibilidade da área de classes ao clicar no botão
