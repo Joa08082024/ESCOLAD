@@ -141,7 +141,7 @@
 
             <button type="submit">Cadastrar</button>
         </form>
-
+        <br><br>
         <!-- Botão para visualizar alunos matriculados por classe -->
         <button id="toggleClassesButton" onclick="toggleClassesSection()">Ver Alunos Matriculados</button>
 
@@ -311,6 +311,7 @@
                 button.textContent = 'Ocultar Alunos Matriculados';  // Muda o texto do botão
             } else {
                 classesSection.style.display = 'none';
+                
                 button.textContent = 'Ver Alunos Matriculados';  // Volta ao texto original
             }
         }
