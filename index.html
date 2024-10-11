@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Alunos</title>
-
-
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,102 +53,13 @@
         button:hover {
             background-color: #218838;
         }
-        @media (max-width: 768px) {
-            .container {
-                max-width: 90%;
-            }
-        }
-        .tabs {
-            display: flex;
-            justify-content: space-between;
-            margin: 20px 0;
-        }
-        .tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 5px;
-        }
-        .tab:hover {
-            background-color: #0056b3;
-        }
-        .tab.active {
-            background-color: #0056b3;
-        }
-        .tab-content {
-            display: none;
-            margin-top: 10px;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        #classesSection {
-            display: none;
-        }
-        .attendance-section {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #e9ecef;
-            border-radius: 5px;
-        }
-        .attendance-count {
-            margin-top: 10px;
-        }
-        .total-students {
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        /* Estilos para lista de alunos */
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            background-color: #f9f9f9;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        li {
-    display: flex;
-    justify-content: space-between; /* Para garantir que os botões e o texto fiquem separados */
-    align-items: center;
-}
-
-li button {
-    padding: 5px 10px; /* Mantém o padding ajustado */
-    font-size: 14px;   /* Ajuste o tamanho da fonte */
-    cursor: pointer;
-    width: auto;       /* Remove largura fixa, se houver */
-    
-    /* Centralizando o texto dentro do botão */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-
-    /* Empurra os botões para a direita */
-    margin-left: auto;
-}
-
-
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Escola dominical</h1>
+        <h1>Cadastro de Alunos</h1>
         <form id="formCadastro">
-            <div class="linha"></div>
             <label for="nome">Nome:</label>
             <input type="text" id="nome" name="nome" required>
 
@@ -173,244 +82,268 @@ li button {
             </select>
 
             <button type="submit">Cadastrar</button>
-            <style>
-                .tabs {
-                    display: flex;
-                    justify-content: space-around;
-                    background-color: #f1f1f1;
-                }
-            
-                .tab {
-                    padding: 10px;
-                    cursor: pointer;
-                    background-color: #ccc;
-                    margin: 2px;
-                    border-radius: 5px;
-                }
-            
-                .tab.active {
-                    background-color: #4CAF50;
-                    color: white;
-                }
-            
-                .tab-content {
-                    display: none;
-                    padding: 20px;
-                    background-color: #f9f9f9;
-                }
-            
-                .tab-content.active {
-                    display: block;
-                }
-            
-                .attendance-section {
-                    margin-top: 20px;
-                    font-weight: bold;
-                }
-            
-                .attendance-buttons {
-                    display: flex; /* Alinha os botões em linha */
-                    gap: 10px; /* Espaço controlado entre os botões */
-                }
-            
-                .btn-presenca, .btn-falta {
-                    padding: 10px 15px;
-                    border: none;
-                    border-radius: 5px;
-                    color: white;
-                    cursor: pointer;
-                    font-size: 14px;
-                    width: 50px; /* Tamanho fixo para os botões */
-                }
-            
-                .btn-presenca {
-                    background-color: green;
-                }
-            
-                .btn-falta {
-                    background-color: red;
-                }
-            
-                .btn-presenca:hover {
-                    background-color: darkgreen;
-                }
-            
-                .btn-falta:hover {
-                    background-color: darkred;
-                }
-            
-                ul {
-                    list-style-type: none;
-                    padding-left: 0;
-                }
-            
-                li {
-                    padding: 10px;
-                    margin: 5px 0;
-                    background-color: #f0f0f0;
-                    border-radius: 5px;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                }
-            
-                .total-students {
-                    margin-top: 15px;
-                    font-size: 16px;
-                    font-weight: bold;
-                }
-            </style>
-            
-            
-                <br><br>
-                <button id="toggleClassesButton" type="button" onclick="toggleClassesSection()">CLASSES</button>
+        </form>
+    </div>
 
-            
-                <div id="classesSection" style="display:none;">
-                    <div class="tabs">
-                        <div class="tab active" onclick="showTab('CORDEIRINHOS')">CORDEIRINHOS</div>
-                        <div class="tab" onclick="showTab('HEROIS')">HEROIS</div>
-                        <div class="tab" onclick="showTab('LIRIO')">LIRIO</div>
-                        <div class="tab" onclick="showTab('ESTRELA')">ESTRELA</div>
-                        <div class="tab" onclick="showTab('SEMENTINHAS')">SEMENTINHAS</div>
-                    </div>
-            
-                    <div id="CORDEIRINHOS" class="tab-content active"></div>
-                    <div id="HEROIS" class="tab-content"></div>
-                    <div id="LIRIO" class="tab-content"></div>
-                    <div id="ESTRELA" class="tab-content"></div>
-                    <div id="SEMENTINHAS" class="tab-content"></div>
-                </div>
-            </form>
-            
-            <script>
-                function formatarData(data) {
-                    const partes = data.split('T')[0].split('-');
-                    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    <script>
+        function formatarData(data) {
+            const partes = data.split('T')[0].split('-');
+            return ${partes[2]}/${partes[1]}/${partes[0]};
+        }
+
+        document.getElementById('formCadastro').onsubmit = function(event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+            var dataNascimento = document.getElementById('dataNascimento').value;
+            var dataFormatada = formatarData(dataNascimento);
+            formData.set('dataNascimento', dataFormatada);
+
+            var classe = document.getElementById('classe').value;
+            var scriptURL = 'https://script.google.com/macros/s/AKfycbxy784iA3y5dIMvcNISnPLC0e7JK0Jx1dUVqIXlK30tyC6P2j16vAfDJ-aQ2i9aCQGd/exec';
+
+            fetch(scriptURL + '?classe=' + classe, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro no servidor: ' + response.statusText);
                 }
-            
-                document.getElementById('formCadastro').onsubmit = function(event) {
-                    event.preventDefault();
-            
-                    var formData = new FormData(this);
-                    var dataNascimento = document.getElementById('dataNascimento').value;
-                    var dataFormatada = formatarData(dataNascimento);
-                    formData.set('dataNascimento', dataFormatada);
-            
-                    var classe = document.getElementById('classe').value;
-                    var scriptURL = 'https://script.google.com/macros/s/AKfycbxy784iA3y5dIMvcNISnPLC0e7JK0Jx1dUVqIXlK30tyC6P2j16vAfDJ-aQ2i9aCQGd/exec';
-            
-                    fetch(scriptURL + '?classe=' + classe, {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Erro no servidor: ' + response.statusText);
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('formCadastro').reset();
+                // Você pode adicionar lógica para exibir uma mensagem de sucesso, se desejar.
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+            });
+        };
+    </script>
+
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Controle de Presença</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 20px 0;
+        }
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .tab {
+            cursor: pointer;
+            padding: 10px;
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            transition: background-color 0.3s;
+        }
+        .tab:hover {
+            background-color: #ddd;
+        }
+        .tab.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .button {
+            margin: 5px;
+            padding: 5px 10px;
+            border: 2px solid #000;
+            background-color: #ccc;
+            color: #000;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .button-presenca {
+            background-color: #4CAF50; /* Cor de fundo para presença */
+        }
+        .button-ausencia {
+            background-color: #f44336; /* Cor de fundo para ausência */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Controle de Presença</h1>
+
+    <button id="toggleClassesButton" type="button" onclick="toggleClassesSection()">CLASSES</button>
+
+    <div id="classesSection" style="display:none;">
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('CORDEIRINHOS', event)">CORDEIRINHOS</div>
+            <div class="tab" onclick="showTab('HEROIS', event)">HEROIS</div>
+            <div class="tab" onclick="showTab('LIRIO', event)">LIRIO</div>
+            <div class="tab" onclick="showTab('ESTRELA', event)">ESTRELA</div>
+            <div class="tab" onclick="showTab('SEMENTINHAS', event)">SEMENTINHAS</div>
+        </div>
+
+        <div id="CORDEIRINHOS" class="tab-content active"></div>
+        <div id="HEROIS" class="tab-content"></div>
+        <div id="LIRIO" class="tab-content"></div>
+        <div id="ESTRELA" class="tab-content"></div>
+        <div id="SEMENTINHAS" class="tab-content"></div>
+    </div>
+
+    <div id="container" class="container"></div>
+
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script>
+        function toggleClassesSection() {
+            const section = document.getElementById('classesSection');
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function showTab(classe, event) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            const allTabs = document.querySelectorAll('.tab');
+            allTabs.forEach(tab => tab.classList.remove('active'));
+
+            document.getElementById(classe).classList.add('active');
+            event.currentTarget.classList.add('active');
+            loadStudents(classe);
+        }
+
+        function loadStudents(classe) {
+            const activeTab = document.getElementById(classe);
+            activeTab.innerHTML = '';
+
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbxy784iA3y5dIMvcNISnPLC0e7JK0Jx1dUVqIXlK30tyC6P2j16vAfDJ-aQ2i9aCQGd/exec';
+
+            fetch(scriptURL + '?classe=' + classe)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data[classe]) {
+                        const totalAlunos = data[classe].length; // Total de alunos na classe
+
+                        // Atualizar a aba com o número de matriculados
+                        const tabElement = document.querySelector(`.tab[onclick="showTab('${classe}', event)"]`);
+                        tabElement.innerHTML = `${classe} - ${totalAlunos} Matriculados`;
+
+                        if (totalAlunos > 0) {
+                            const table = document.createElement('table');
+                            const headerRow = document.createElement('tr');
+                            headerRow.innerHTML = `
+                                <th>ALUNO</th>
+                                <th>DATA N</th>
+                                <th>PRESENTE</th>
+                                <th>AUSENTE</th>
+                            `;
+                            table.appendChild(headerRow);
+
+                            data[classe].forEach(student => {
+                                const dataFormatada = formatarData(student.dataNascimento);
+                                const dataRow = document.createElement('tr');
+
+                                dataRow.innerHTML = `
+                                    <td>${student.nome}</td>
+                                    <td>${dataFormatada}</td>
+                                    <td><button class="button button-presenca" onclick="marcarPresenca('${student.nome}')">Presença</button></td>
+                                    <td><button class="button button-ausencia" onclick="marcarAusencia('${student.nome}')">Ausente</button></td>
+                                `;
+                                table.appendChild(dataRow);
+                            });
+
+                            activeTab.appendChild(table);
                         }
-                        return response.text();
-                    })
-                    .then(data => {
-                        
-                        document.getElementById('formCadastro').reset();
-                        loadStudents(classe);
-                    })
-                    .catch(error => {
-                        console.error('Erro:', error);
-                    });
-                };
-            
-                function showTab(classe) {
-                    const tabs = document.querySelectorAll('.tab-content');
-                    tabs.forEach(tab => tab.classList.remove('active'));
-            
-                    const allTabs = document.querySelectorAll('.tab');
-                    allTabs.forEach(tab => tab.classList.remove('active'));
-            
-                    document.getElementById(classe).classList.add('active');
-                    event.target.classList.add('active');
-                    loadStudents(classe);
-                }
-            
-                function loadStudents(classe) {
-                    const activeTab = document.getElementById(classe);
-                    activeTab.innerHTML = '';
-            
-                    const scriptURL = 'https://script.google.com/macros/s/AKfycbxy784iA3y5dIMvcNISnPLC0e7JK0Jx1dUVqIXlK30tyC6P2j16vAfDJ-aQ2i9aCQGd/exec';
-            
-                    fetch(scriptURL + '?classe=' + classe)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data && data[classe].length > 0) {
-                                const ul = document.createElement('ul');
-                                const attendanceCounts = { present: 0, absent: 0, matriculados: data[classe].length };
-                                
-                                const totalStudents = document.createElement('div');
-                                totalStudents.classList.add('total-students');
-                                totalStudents.innerHTML = `<p>Matriculados: ${attendanceCounts.matriculados}</p>`;
-                                activeTab.appendChild(totalStudents);
-            
-                                data[classe].forEach(student => {
-                                    const li = document.createElement('li');
-                                    const dataFormatada = formatarData(student.dataNascimento);
-            
-                                    const buttonsContainer = document.createElement('div');
-                                    buttonsContainer.classList.add('attendance-buttons');
-            
-                                    const presenceButton = document.createElement('button');
-                                    presenceButton.textContent = 'P';
-                                    presenceButton.classList.add('btn-presenca');
-                                    presenceButton.onclick = function() {
-                                        
-                                        attendanceCounts.present++;
-                                        updateAttendanceCount(activeTab, attendanceCounts);
-                                    };
-            
-                                    const absenceButton = document.createElement('button');
-                                    absenceButton.textContent = 'F';
-                                    absenceButton.classList.add('btn-falta');
-                                    absenceButton.onclick = function() {
-                                        
-                                        attendanceCounts.absent++;
-                                        updateAttendanceCount(activeTab, attendanceCounts);
-                                    };
-            
-                                    buttonsContainer.appendChild(presenceButton);
-                                    buttonsContainer.appendChild(absenceButton);
-            
-                                    li.innerHTML = `<strong>Nome:</strong> ${student.nome} - ${dataFormatada}`;
-                                    li.appendChild(buttonsContainer);
-                                    ul.appendChild(li);
-                                });
-            
-                                activeTab.appendChild(ul);
-                                updateAttendanceCount(activeTab, attendanceCounts);
-                            } else {
-                                activeTab.innerHTML = '<p>Nenhum aluno matriculado.</p>';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Erro:', error);
-                        });
-                }
-            
-                function updateAttendanceCount(tabElement, counts) {
-                    let attendanceSection = tabElement.querySelector('.attendance-section');
-                    if (!attendanceSection) {
-                        attendanceSection = document.createElement('div');
-                        attendanceSection.classList.add('attendance-section');
-                        tabElement.appendChild(attendanceSection);
-                    }
-                    attendanceSection.innerHTML = `<strong>Presenças:</strong> ${counts.present} - <strong>Ausências:</strong> ${counts.absent} - <p>Matriculados: ${counts.matriculados}</p>`;
-                }
-            
-                function toggleClassesSection() {
-                    const classesSection = document.getElementById('classesSection');
-                    if (classesSection.style.display === 'none' || classesSection.style.display === '') {
-                        classesSection.style.display = 'block';
                     } else {
-                        classesSection.style.display = 'none';
+                        console.error('Dados não encontrados para a classe:', classe);
                     }
-                }
-            </script>
-            
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar alunos:', error);
+                });
+        }
+
+        function formatarData(data) {
+            const partes = data.split('T')[0].split('-');
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+
+        let presentes = 0;
+        let ausentes = 0;
+        let statusAlunos = {};
+
+        function marcarPresenca(aluno) {
+            if (statusAlunos[aluno] === 'ausente') {
+                ausentes--;
+            }
+            if (statusAlunos[aluno] !== 'presente') {
+                presentes++;
+                statusAlunos[aluno] = 'presente';
+            }
+            atualizarContadores();
+        }
+
+        function marcarAusencia(aluno) {
+            if (statusAlunos[aluno] === 'presente') {
+                presentes--;
+            }
+            if (statusAlunos[aluno] !== 'ausente') {
+                ausentes++;
+                statusAlunos[aluno] = 'ausente';
+            }
+            atualizarContadores();
+        }
+
+        function atualizarContadores() {
+            const attendanceSection = document.querySelector('.attendance-section');
+            if (!attendanceSection) {
+                const section = document.createElement('div');
+                section.classList.add('attendance-section');
+                section.innerHTML = `
+                    <div class="attendance-count">
+                        <p>Presentes: ${presentes}</p>
+                        <p>Ausentes: ${ausentes}</p>
+                    </div>
+                `;
+                document.body.appendChild(section);
+            } else {
+                const attendanceCount = attendanceSection.querySelector('.attendance-count');
+                attendanceCount.innerHTML = `
+                    <p>Presentes: ${presentes}</p>
+                    <p>Ausentes: ${ausentes}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
