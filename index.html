@@ -123,262 +123,196 @@
     </script>
 </body>
 </html>
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Controle de Presença</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    
 
-        h1 {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 600px;
-            margin: 20px 0;
-        }
-
-        .tabs {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            cursor: pointer;
-            padding: 10px;
-            background-color: #f2f2f2;
-            border: 1px solid #ccc;
-            transition: background-color 0.3s;
-        }
-
-        .tab:hover {
-            background-color: #ddd;
-        }
-
-        .tab.active {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Área de alterações para o botão CLASSES */
-        #toggleClassesButton {
-            margin: 5px; /* Margem externa do botão */
-            padding: 8px 1px; /* Tamanho do botão */
-            border: 2px solid #000;
-            background-color: #ccc;
-            color: #000;
-            font-size: 14px; /* Tamanho da fonte */
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        #toggleClassesButton:hover {
-            background-color: #bbb;
-        }
-
-        .button {
-            margin: 5px;
-            padding: 5px 5px;
-            border: 2px solid #000;
-            background-color: #ccc;
-            color: #000;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .button-presenca {
-            background-color: #4CAF50; /* Cor de fundo para presença */
-        }
-
-        .button-ausencia {
-            background-color: #f44336; /* Cor de fundo para ausência */
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-    </style>
-</head>
-<body>
-
-    <h1>Controle de Presença</h1>
-
-    <button id="toggleClassesButton" type="button" onclick="toggleClassesSection()">CLASSES</button>
-
-    <div id="classesSection" style="display:none;">
-        <div class="tabs">
-            <div class="tab active" onclick="showTab('CORDEIRINHOS', event)">CORDEIRINHOS</div>
-            <div class="tab" onclick="showTab('HEROIS', event)">HEROIS</div>
-            <div class="tab" onclick="showTab('LIRIO', event)">LIRIO</div>
-            <div class="tab" onclick="showTab('ESTRELA', event)">ESTRELA</div>
-            <div class="tab" onclick="showTab('SEMENTINHAS', event)">SEMENTINHAS</div>
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sistema de Controle de Presença</title>
+        <style>
+            /* Adicione seu estilo aqui */
+            .container {
+                padding: 20px;
+            }
+            .tab-content {
+                display: none;
+            }
+            .tab-content.active {
+                display: block;
+            }
+            .button {
+                margin: 5px;
+                padding: 10px;
+                cursor: pointer;
+            }
+            th, td {
+                padding: 15px; /* Aumente o padding para dar mais espaço */
+                text-align: left; /* Alinhamento do texto à esquerda */
+            }
+            table {
+                width: 100%; /* Certifique-se de que a tabela ocupe toda a largura */
+                border-collapse: collapse; /* Remove espaçamentos entre as células */
+            }
+            th {
+                background-color: #f2f2f2; /* Cor de fundo para cabeçalhos */
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9; /* Cor de fundo alternada para linhas */
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Controle de Presença</h1>
+            <button onclick="toggleClassesSection()">Selecionar Classe</button>
+    
+            <div id="classesSection" style="display:none;">
+                <select id="classSelector" onchange="changeTab()">
+                    <option value="CORDEIRINHOS">CORDEIRINHOS</option>
+                    <option value="HEROIS">HEROIS</option>
+                    <option value="LIRIO">LIRIO</option>
+                    <option value="ESTRELA">ESTRELA</option>
+                    <option value="SEMENTINHAS">SEMENTINHAS</option>
+                </select>
+    
+                <div id="CORDEIRINHOS" class="tab-content active"></div>
+                <div id="HEROIS" class="tab-content"></div>
+                <div id="LIRIO" class="tab-content"></div>
+                <div id="ESTRELA" class="tab-content"></div>
+                <div id="SEMENTINHAS" class="tab-content"></div>
+            </div>
+    
+            <div id="container" class="container"></div>
         </div>
-
-        <div id="CORDEIRINHOS" class="tab-content active"></div>
-        <div id="HEROIS" class="tab-content"></div>
-        <div id="LIRIO" class="tab-content"></div>
-        <div id="ESTRELA" class="tab-content"></div>
-        <div id="SEMENTINHAS" class="tab-content"></div>
-    </div>
-
-    <div id="container" class="container"></div>
-
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script>
-        function toggleClassesSection() {
-            const section = document.getElementById('classesSection');
-            section.style.display = section.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function showTab(classe, event) {
-            const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.classList.remove('active'));
-
-            const allTabs = document.querySelectorAll('.tab');
-            allTabs.forEach(tab => tab.classList.remove('active'));
-
-            document.getElementById(classe).classList.add('active');
-            event.currentTarget.classList.add('active'); // Atualizado para usar event.currentTarget
-            loadStudents(classe);
-        }
-
-        function loadStudents(classe) {
-            const activeTab = document.getElementById(classe);
-            activeTab.innerHTML = '';
-
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxy784iA3y5dIMvcNISnPLC0e7JK0Jx1dUVqIXlK30tyC6P2j16vAfDJ-aQ2i9aCQGd/exec';
-
-            fetch(scriptURL + '?classe=' + classe)
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data[classe]) {
-                        const totalAlunos = data[classe].length; // Total de alunos na classe
-
-                        // Atualizar a aba com o número de matriculados
-                        const tabElement = document.querySelector(`.tab[onclick="showTab('${classe}', event)"]`);
-                        tabElement.innerHTML = `${classe} - ${totalAlunos} Matriculados`;
-
-                        if (totalAlunos > 0) {
-                            const table = document.createElement('table');
-                            const headerRow = document.createElement('tr');
-                            headerRow.innerHTML = `
-                                <th>ALUNO</th>
-                                <th>DATA N</th>
-                                <th>PRESENTE</th>
-                                <th>AUSENTE</th>
-                            `;
-                            table.appendChild(headerRow);
-
-                            data[classe].forEach(student => {
-                                const dataFormatada = formatarData(student.dataNascimento);
-                                const dataRow = document.createElement('tr');
-
-                                dataRow.innerHTML = `
-                                    <td>${student.nome}</td>
-                                    <td>${dataFormatada}</td>
-                                    <td><button class="button button-presenca" onclick="marcarPresenca('${student.nome}', this)">Presença</button></td>
-                                    <td><button class="button button-ausencia" onclick="marcarAusencia('${student.nome}', this)">Ausente</button></td>
+    
+        <script src="https://apis.google.com/js/api.js"></script>
+        <script>
+            function toggleClassesSection() {
+                const section = document.getElementById('classesSection');
+                section.style.display = section.style.display === 'none' ? 'block' : 'none';
+                if (section.style.display === 'block') {
+                    changeTab(); // Carregar a aba inicial quando a seção é exibida
+                }
+            }
+    
+            function changeTab() {
+                const select = document.getElementById('classSelector');
+                const classe = select.value;
+    
+                const tabs = document.querySelectorAll('.tab-content');
+                tabs.forEach(tab => tab.classList.remove('active'));
+    
+                document.getElementById(classe).classList.add('active');
+                loadStudents(classe);
+            }
+    
+            function loadStudents(classe) {
+                const activeTab = document.getElementById(classe);
+                activeTab.innerHTML = '';
+    
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbxy784iA3y5dIMvcNISnPLC0e7JK0Jx1dUVqIXlK30tyC6P2j16vAfDJ-aQ2i9aCQGd/exec';
+    
+                fetch(scriptURL + '?classe=' + classe)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data[classe]) {
+                            const totalAlunos = data[classe].length; // Total de alunos na classe
+    
+                            // Atualizar a aba com o número de matriculados
+                            const tabElement = document.querySelector(`#classSelector option[value="${classe}"]`);
+                            tabElement.innerHTML = `${classe} - ${totalAlunos} Matriculados`;
+    
+                            if (totalAlunos > 0) {
+                                const table = document.createElement('table');
+                                const headerRow = document.createElement('tr');
+                                headerRow.innerHTML = `
+                                    <th>ALUNO</th>
+                                    <th>DATA N</th>
+                                    <th>PRESENTE</th>
+                                    <th>AUSENTE</th>
                                 `;
-                                table.appendChild(dataRow);
-                            });
-
-                            activeTab.appendChild(table);
+                                table.appendChild(headerRow);
+    
+                                data[classe].forEach(student => {
+                                    const dataFormatada = formatarData(student.dataNascimento);
+                                    const dataRow = document.createElement('tr');
+    
+                                    dataRow.innerHTML = `
+                                        <td>${student.nome}</td>
+                                        <td>${dataFormatada}</td>
+                                        <td><button class="button button-presenca" onclick="marcarPresenca('${student.nome}', this)">Presença</button></td>
+                                        <td><button class="button button-ausencia" onclick="marcarAusencia('${student.nome}', this)">Ausente</button></td>
+                                    `;
+                                    table.appendChild(dataRow);
+                                });
+    
+                                activeTab.appendChild(table);
+                            }
+                        } else {
+                            console.error('Dados não encontrados para a classe:', classe);
                         }
-                    } else {
-                        console.error('Dados não encontrados para a classe:', classe);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro ao carregar alunos:', error);
-                });
-        }
-
-        function formatarData(data) {
-            const partes = data.split('T')[0].split('-');
-            return `${partes[2]}/${partes[1]}/${partes[0]}`;
-        }
-
-        let presentes = 0;
-        let ausentes = 0;
-        let statusAlunos = {};
-
-        function marcarPresenca(aluno, button) {
-            if (statusAlunos[aluno] === 'ausente') {
-                ausentes--;
+                    })
+                    .catch(error => {
+                        console.error('Erro ao carregar alunos:', error);
+                    });
             }
-            if (statusAlunos[aluno] !== 'presente') {
-                presentes++;
-                statusAlunos[aluno] = 'presente';
+    
+            function formatarData(data) {
+                const partes = data.split('T')[0].split('-');
+                return `${partes[2]}/${partes[1]}/${partes[0]}`;
             }
-            button.style.backgroundColor = 'yellow'; // Mudar cor ao marcar presença
-            atualizarContadores();
-        }
-
-        function marcarAusencia(aluno, button) {
-            if (statusAlunos[aluno] === 'presente') {
-                presentes--;
+    
+            let presentes = 0;
+            let ausentes = 0;
+            let statusAlunos = {};
+    
+            function marcarPresenca(aluno, button) {
+                if (statusAlunos[aluno] === 'ausente') {
+                    ausentes--;
+                }
+                if (statusAlunos[aluno] !== 'presente') {
+                    presentes++;
+                    statusAlunos[aluno] = 'presente';
+                }
+                button.style.backgroundColor = 'yellow'; // Mudar cor ao marcar presença
+                atualizarContadores();
             }
-            if (statusAlunos[aluno] !== 'ausente') {
-                ausentes++;
-                statusAlunos[aluno] = 'ausente';
+    
+            function marcarAusencia(aluno, button) {
+                if (statusAlunos[aluno] === 'presente') {
+                    presentes--;
+                }
+                if (statusAlunos[aluno] !== 'ausente') {
+                    ausentes++;
+                    statusAlunos[aluno] = 'ausente';
+                }
+                button.style.backgroundColor = 'blue'; // Mudar cor ao marcar ausência
+                atualizarContadores();
             }
-            button.style.backgroundColor = 'blue'; // Mudar cor ao marcar ausência
-            atualizarContadores();
-        }
-
-        function atualizarContadores() {
-            const attendanceSection = document.querySelector('.attendance-section');
-            if (!attendanceSection) {
-                const section = document.createElement('div');
-                section.classList.add('attendance-section');
-                section.innerHTML = `
-                    <div class="attendance-count">
+    
+            function atualizarContadores() {
+                const attendanceSection = document.querySelector('.attendance-section');
+                if (!attendanceSection) {
+                    const section = document.createElement('div');
+                    section.classList.add('attendance-section');
+                    section.innerHTML = `
+                        <div class="attendance-count">
+                            <p>Presentes: ${presentes}</p>
+                            <p>Ausentes: ${ausentes}</p>
+                        </div>
+                    `;
+                    document.body.appendChild(section);
+                } else {
+                    const attendanceCount = attendanceSection.querySelector('.attendance-count');
+                    attendanceCount.innerHTML = `
                         <p>Presentes: ${presentes}</p>
                         <p>Ausentes: ${ausentes}</p>
-                    </div>
-                `;
-                document.body.appendChild(section);
-            } else {
-                const attendanceCount = attendanceSection.querySelector('.attendance-count');
-                attendanceCount.innerHTML = `
-                    <p>Presentes: ${presentes}</p>
-                    <p>Ausentes: ${ausentes}</p>
-                `;
+                    `;
+                }
             }
-        }
-    </script>
-</body>
-</html>
+        </script>
+    </body>
+    </html>
+    
