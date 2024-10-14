@@ -53,6 +53,18 @@
         button:hover {
             background-color: #218838;
         }
+        .link-presenca {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .link-presenca a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+        .link-presenca a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -83,6 +95,11 @@
 
             <button type="submit">Cadastrar</button>
         </form>
+
+        <!-- Link para acessar o controle de presença -->
+        <div class="link-presenca">
+            <a href="classes.html">Acessar Classes</a>
+        </div>
     </div>
 
     <script>
@@ -121,20 +138,5 @@
             });
         };
     </script>
-
-    <!-- Adicionando o código de registro do Service Worker -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-            console.log('Service Worker registrado com sucesso: ', registration.scope);
-          }, function(error) {
-            console.log('Falha ao registrar o Service Worker: ', error);
-          });
-        });
-      }
-    </script>
-    <!-- Fim do código do Service Worker -->
-
 </body>
 </html>
